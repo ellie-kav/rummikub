@@ -4,6 +4,9 @@ import com.elliekavanagh.rummikub.model.Color;
 import com.elliekavanagh.rummikub.model.Meld;
 import com.elliekavanagh.rummikub.model.MeldType;
 import com.elliekavanagh.rummikub.model.Tile;
+
+import com.elliekavanagh.rummikub.rules.SetValidator;
+
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -73,6 +76,17 @@ class SetValidatorTest {
         ));
         assertFalse(validator.isValid(meld));
     }
+
+    @Test
+    void invalidSet_allJokersIsRejected() {
+        Meld meld = new Meld(MeldType.SET, List.of(
+                new Tile(),
+                new Tile(),
+                new Tile()
+        ));
+        assertFalse(validator.isValid(meld));
+    }
+
 
     @Test
     void invalidSet_tooLong() {

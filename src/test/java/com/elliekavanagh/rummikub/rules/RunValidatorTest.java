@@ -4,6 +4,9 @@ import com.elliekavanagh.rummikub.model.Color;
 import com.elliekavanagh.rummikub.model.Meld;
 import com.elliekavanagh.rummikub.model.MeldType;
 import com.elliekavanagh.rummikub.model.Tile;
+
+import com.elliekavanagh.rummikub.rules.RunValidator;
+
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -42,6 +45,26 @@ class RunValidatorTest {
                 new Tile(Color.RED, 7)
         ));
         assertFalse(validator.isValid(meld));
+    }
+
+    @Test
+    void invalidRun_allJokersIsRejected() {
+        Meld meld = new Meld(MeldType.RUN, List.of(
+                new Tile(),
+                new Tile(),
+                new Tile()
+        ));
+        assertFalse(validator.isValid(meld));
+    }
+    
+    @Test
+    void validRun_jokersCanExtendWithinBounds() {
+        Meld meld = new Meld(MeldType.RUN, List.of(
+                new Tile(Color.RED, 12),
+                new Tile(),
+                new Tile()
+        ));
+        assertTrue(validator.isValid(meld));
     }
 
     @Test
