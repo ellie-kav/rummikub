@@ -37,6 +37,11 @@ public class Tile {
         return value;
     }
 
+    public static Tile joker() {
+        return new Tile();
+    }
+    
+
     @Override
     public String toString() {
         return isJoker ? "JOKER" : value + " " + color;
