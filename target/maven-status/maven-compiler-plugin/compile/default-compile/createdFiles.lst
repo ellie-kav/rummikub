@@ -1,7 +1,0 @@
-com/elliekavanagh/rummikub/model/Color.class
-com/elliekavanagh/rummikub/model/Meld.class
-com/elliekavanagh/rummikub/model/Tile.class
-com/elliekavanagh/rummikub/rules/RunValidator.class
-com/elliekavanagh/rummikub/rules/SetValidator.class
-com/elliekavanagh/rummikub/model/MeldType.class
-com/elliekavanagh/rummikub/rules/MeldValidator.class
