@@ -93,35 +93,93 @@ Example response:
 }
 ```
 
+### Technical Highlight: Joker Resolution
+
+Jokers are the most complex part of Rummikub validation, especially for **runs**.
+
+To validate a run with jokers, the rules engine:
+- Separates joker and non-joker tiles
+- Sorts non-jokers by value
+- Computes the gaps between consecutive tiles
+- Uses available jokers to fill those gaps
+- Ensures any remaining jokers can extend the run without exceeding bounds (1–13)
+
+For example:
+- `[Red 5, Joker, Joker, Red 8]` → **valid** (jokers fill 6 and 7)
+- `[Red 5, Joker, Red 9]` → **invalid** (not enough jokers to fill gaps)
+
+This approach avoids brute-force substitution and validates melds in **linear time** relative to meld size, while remaining deterministic and easy to test.
+
+Set validation follows similar principles, treating jokers as wildcards for missing colors while enforcing size, value, and uniqueness constraints.
+
 ---
 
 ## Getting Started
 #### Run Locally
-```
+```bash
 mvn spring-boot:run
 ```
 The API will be available at:
-```
+```bash
 http://localhost:8080
 ```
 #### Run with Docker
-```
+```bash
 docker build -t rummikub-engine .
 docker run -p 8080:8080 rummikub-engine
 ```
 
 ---
 
-## Testing
+## Docker Support
+
+The API is packaged as a Docker container to ensure consistent local development and deployment.
+
+- Runs as a single executable JAR on **Java 17**
+- Exposes port **8080**
+- Includes a **health check endpoint** (`/actuator/health`) for container orchestration
+- Suitable for production-style deployment and CI pipelines
+
+---
+
+## Test Coverage
+
+The rules engine is covered with focused unit tests around both **happy paths** and **edge cases**, especially for **joker substitution**.
+
+### Unit Tests
+- ✅ `RunValidatorTest`
+  - Valid runs: 3-tile, 4+ tile, joker in middle, joker at ends, multiple jokers
+  - Invalid runs: color mismatch, gaps too large for available jokers, duplicates, out-of-range values
+- ✅ `SetValidatorTest`
+  - Valid sets: 3-tile, 4-tile, joker substitution for missing colors
+  - Invalid sets: duplicate colors, wrong size (<3 or >4), inconsistent values, illegal duplicates
+- ✅ `RulesEngineTest`
+  - Routes requests to the correct validator (RUN vs SET)
+  - Aggregates violations into a consistent response object
+
 Run unit tests with:
-```
+```bash
 mvn test
 ```
-Tests cover:
-    - Valid and invalid runs
-    - Valid and invalid sets
-    - Joker edge cases
-    - Duplicate tiles and illegal configurations
+
+### Integration Tests (API)
+
+- ✅ **`MeldValidationControllerTest`**
+  - End-to-end validation via HTTP using JSON request/response bodies
+  - Verifies `400 Bad Request` responses for invalid payloads:
+    - Missing required fields
+    - Invalid enum values
+    - Malformed or illegal tile definitions
+  - Asserts error response structure, including:
+    - `violations` list
+    - Echoed `type` field
+
+Run integration tests (if separated via naming or profile):
+
+```bash
+mvn test
+```
+
 
 ---
 
