@@ -167,14 +167,14 @@ Set validation follows similar principles, treating jokers as wildcards for miss
 ```bash
 mvn spring-boot:run
 ```
-The API will be available at:
-```bash
-http://localhost:8080
-```
 #### Run with Docker
 ```bash
 docker build -t rummikub-engine .
 docker run -p 8080:8080 rummikub-engine
+```
+The API will be available at:
+```bash
+http://localhost:8080
 ```
 
 ---
