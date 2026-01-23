@@ -156,9 +156,12 @@ For example:
 - `[Red 5, Joker, Joker, Red 8]` → **valid** (jokers fill 6 and 7)
 - `[Red 5, Joker, Red 9]` → **invalid** (not enough jokers to fill gaps)
 
-This approach avoids brute-force substitution and validates melds in **linear time** relative to meld size, while remaining deterministic and easy to test.
+This approach avoids brute-force substitution and validates melds efficiently
+(**O(n log n)** due to sorting), while remaining deterministic and easy to test.
 
 Set validation follows similar principles, treating jokers as wildcards for missing colors while enforcing size, value, and uniqueness constraints.
+
+Note: This engine uses strict validation. Melds consisting entirely of jokers are rejected to keep rule evaluation deterministic.
 
 ---
 
@@ -232,13 +235,9 @@ mvn test
 
 - ✅ **`ValidationControllerTest`**
   - Loads the full Spring application context (`@SpringBootTest`)
-  - Exercises the meld validation API via HTTP using `MockMvc` and JSON request/response bodies
-  - Verifies correct request routing from controller → rules engine → validators
-  - Asserts `400 Bad Request` responses for invalid payloads, including:
-    - Missing required fields
-    - Invalid enum values
-    - Malformed or illegal tile definitions
-  - Asserts error response structure
+  - Exercises the meld validation endpoint using MockMvc with JSON request/response bodies
+  - Verifies controller → rules engine → validators wiring
+  - Asserts a successful validation response for a valid meld submission ({"valid": true})
 
 Run integration tests:
 
