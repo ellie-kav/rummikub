@@ -1,6 +1,14 @@
 # Rummikub Rules Engine
 
-Rummikub is a tile-based game combining and mahjong. Players arrange tiles numbered 1-13 in four colors (red, blue, black, yellow), plus jokers that can substitute for any tile.
+Rummikub is a tile-based game combining elements of rummy and mahjong. Players arrange tiles numbered 1-13 in four colors (red, blue, black, yellow), plus jokers that can substitute for any tile.
+
+Below is a small visual example of common gameplay patterns.
+
+**Run:**  
+🟥5 🟥6 🃏 🟥8
+
+**Set:**  
+🟥7 🟦7 ⬛7
 
 This project implements a Rummikub rules engine in Java, focused on validating melds correctly and rigorously, including full joker logic, and exposes that logic via a Spring Boot REST API, containerized with Docker.
 
