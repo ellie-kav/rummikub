@@ -188,8 +188,8 @@ The API is packaged as a Docker container to ensure consistent local development
 
 - Runs as a single executable JAR on **Java 17**
 - Exposes port **8080**
-- Includes a **health check endpoint** (`/actuator/health`) for container orchestration
-- Suitable for production-style deployment and CI pipelines
+- Includes a lightweight health check endpoint (`/health`)
+- Suitable for local development and CI pipelines
 
 ---
 
