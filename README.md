@@ -238,9 +238,7 @@ mvn test
     - Missing required fields
     - Invalid enum values
     - Malformed or illegal tile definitions
-  - Asserts error response structure, including:
-    - `violations` list
-    - Echoed `type` field
+  - Asserts error response structure
 
 Run integration tests:
 
