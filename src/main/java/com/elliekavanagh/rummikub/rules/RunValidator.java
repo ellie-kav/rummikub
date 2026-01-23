@@ -10,8 +10,21 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Validates RUN melds (same color, consecutive values) with optional jokers.
+ *
+ * Strategy:
+ * - Collect and sort non-joker values (enforcing single color + no duplicates).
+ * - Compute internal gaps (jokers must fill these first).
+ * - Any remaining jokers may extend the run on either end, but the final run
+ *   must remain within 1..13.
+ *
+ * Note: This validator treats an all-joker run as invalid.
+ */
 public class RunValidator implements MeldValidator {
-
+    /**
+    * Returns true if the meld forms a legal run of length >= 3.
+    */
     @Override
     public boolean isValid(Meld meld) {
         if (meld == null || meld.getTiles() == null) return false;
@@ -33,22 +46,19 @@ public class RunValidator implements MeldValidator {
                 continue;
             }
 
-            // Color consistency
             if (runColor == null) runColor = t.getColor();
             else if (t.getColor() != runColor) return false;
 
             Integer v = t.getValue();
             if (v == null) return false;
 
-            // No duplicates among non-jokers
             if (seen.contains(v)) return false;
             seen.add(v);
 
             values.add(v);
         }
 
-        // If all tiles are jokers, we can’t determine a valid concrete run in a strict validator
-        // (and in real game you can place jokers but they represent specific values)
+        // If all tiles are jokers, can’t determine a valid concrete run in a strict validator.
         if (values.isEmpty()) return false;
 
         values.sort(Comparator.naturalOrder());
@@ -60,9 +70,9 @@ public class RunValidator implements MeldValidator {
             int curr = values.get(i);
 
             int diff = curr - prev;
-            if (diff == 0) return false;      // already handled, but safe
-            if (diff == 1) continue;          // consecutive
-            gapsNeeded += (diff - 1);         // jokers required to fill missing numbers
+            if (diff == 0) return false;      
+            if (diff == 1) continue;          
+            gapsNeeded += (diff - 1);         
         }
 
         // Jokers must be enough to fill internal gaps
@@ -79,8 +89,6 @@ public class RunValidator implements MeldValidator {
         int extendLeft = Math.min(remainingJokers, min - 1);
         int extendRight = Math.min(remainingJokers - extendLeft, 13 - max);
 
-        // If we can place all remaining jokers within bounds, it’s valid.
-        // (We can distribute them left then right; if still leftover, it would exceed bounds.)
         int placed = extendLeft + extendRight;
         return placed == remainingJokers;
     }

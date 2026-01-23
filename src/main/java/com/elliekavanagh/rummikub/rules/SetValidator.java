@@ -8,8 +8,22 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Validates SET melds (same value, distinct colors) with optional jokers.
+ *
+ * Rules enforced:
+ * - A set must contain 3 or 4 tiles.
+ * - All non-joker tiles must share the same value.
+ * - Non-joker tiles must all have distinct colors.
+ * - Jokers may substitute for missing colors, but the total
+ *   number of tiles may not exceed 4.
+ *
+ * Note: An all-joker set is rejected to keep validation deterministic.
+ */
 public class SetValidator implements MeldValidator {
-
+    /**
+    * Returns true if the meld forms a legal set.
+    */
     @Override
     public boolean isValid(Meld meld) {
         if (meld == null || meld.getTiles() == null) return false;
@@ -17,7 +31,6 @@ public class SetValidator implements MeldValidator {
         List<Tile> tiles = meld.getTiles();
         int n = tiles.size();
 
-        // Sets are 3 or 4 tiles
         if (n < 3 || n > 4) return false;
 
         Integer targetValue = null;
@@ -33,14 +46,12 @@ public class SetValidator implements MeldValidator {
                 continue;
             }
 
-            // Value consistency
             Integer v = t.getValue();
             if (v == null) return false;
 
             if (targetValue == null) targetValue = v;
             else if (!targetValue.equals(v)) return false;
 
-            // Color uniqueness
             Color c = t.getColor();
             if (c == null) return false;
 
@@ -48,13 +59,10 @@ public class SetValidator implements MeldValidator {
             colorsSeen.add(c);
         }
 
-        // All jokers: ambiguous as a strict validator (you could choose a value),
-        // but we’ll reject to keep rules deterministic.
         if (targetValue == null) return false;
 
         // If there are jokers, they can take any missing colors,
         // but the set cannot exceed 4 distinct colors total.
-        // (We already limited n <= 4 and ensured non-joker colors are unique.)
         return colorsSeen.size() + jokerCount == n;
     }
 }

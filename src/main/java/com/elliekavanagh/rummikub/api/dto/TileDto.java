@@ -1,9 +1,28 @@
 package com.elliekavanagh.rummikub.api.dto;
 
+/**
+ * Data transfer object representing a single Rummikub tile
+ * submitted by the client for validation.
+ *
+ * Jokers may substitute for any color and value during
+ * meld validation.
+ */
+
 public class TileDto {
-    private String color;   // "RED", "BLUE", "BLACK", "YELLOW"
-    private Integer value;  // 1..13
-    private Boolean joker;  // true if joker
+    /**
+    * Tile color. Must be one of RED, BLUE, BLACK, or YELLOW.
+    */
+    private String color;
+
+    /**
+    * Tile face value (1–13). May be null if this tile is a joker.
+    */
+    private Integer value;
+    
+    /**
+    * Indicates whether this tile is a joker.
+    */
+    private Boolean joker;
 
     public TileDto() {}
 

@@ -14,6 +14,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * REST controller responsible for validating Rummikub melds.
+ *
+ * Accepts meld validation requests from the client, converts
+ * incoming DTOs into domain models, and delegates rule checking
+ * to the MeldRulesEngine.
+ */
 @RestController
 @RequestMapping("/api/v1")
 public class ValidationController {
@@ -37,8 +44,6 @@ public class ValidationController {
         boolean isJoker = dto.getJoker() != null && dto.getJoker();
 
         if (isJoker) {
-            // Assumes your Tile model supports joker via nulls or a special constructor.
-            // If your Tile has Tile(Color, int) only, tell me and I’ll match YOUR Tile API.
             return Tile.joker();
         }
 
