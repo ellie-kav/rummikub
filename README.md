@@ -261,7 +261,3 @@ mvn test
 
 - **Client interface:** add a lightweight **CLI** or simple web UI to submit melds and visualize validation results.
 
-- **Rules engine modularization:** extract the core validation logic into a standalone, framework-agnostic module that can be reused across different execution contexts (REST API, batch processing, or message-driven services).
-
-- **Service-oriented integration:** expose the rules engine behind a stable API contract to enable independent deployment and integration within a microservice-based architecture.
-
