@@ -185,7 +185,8 @@ mvn test
 
 ## Future Improvements
 
-- **Full table validation:** validate an entire board state (multiple melds per turn), including legality checks when tiles are rearranged.
-- **Game state + turn flow:** model a full game lifecycle (rack, draw pile, turns, plays) to enable gameplay-level validation.
+- **Full table validation:** validate an entire board state (multiple melds per turn), including legality checks when tiles are rearranged across the table.
+- **Game state + turn flow:** model a complete game lifecycle (rack, draw pile, turns, plays) to support gameplay-level validation and stateful interactions.
 - **Client interface:** add a lightweight **CLI** or simple web UI to submit melds and visualize validation results.
-- **Modularization:** extract the rules engine into a standalone module with no framework dependencies, enabling reuse across different services or execution contexts.
+- **Rules engine modularization:** extract the core validation logic into a standalone, framework-agnostic module that can be reused across different execution contexts (REST API, batch processing, or message-driven services).
+- **Service-oriented integration:** expose the rules engine behind a stable API contract to enable independent deployment and integration within a microservice-based architecture.
