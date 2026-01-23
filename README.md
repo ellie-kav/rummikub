@@ -4,26 +4,37 @@ Rummikub is a tile-based game combining and mahjong. Players arrange tiles numbe
 
 This project implements a Rummikub rules engine in Java, focused on validating melds correctly and rigorously, including full joker logic, and exposes that logic via a Spring Boot REST API, containerized with Docker.
 
+---
 
 ## Game Rules (Rummikub Basics)
-Playes form valid **melds** by arranging tiles into one of the following:
-    1. RUNS - sequences of 3+ consecutive numbers in the same color
-        - Examples: 
-            - [Red 5, Red 6, Red 7]
-            - [Blue 10, Joker, Blue 12] → Joker represents Blue 11
-        - Rules:
-            - All tiles must share the same color (excluding jokers)
-            - Numbers must be consecutive
-            - Jokers may fill gaps or extend a run
 
-    2. SETS - groups of 3-4 tiles with the same number in different colors
-        - Examples: 
-            - [Red 7, Blue 7, Black 7]
-            - [Red 9, Joker, Black 9] → Joker represents Blue or Yellow 9
-        - Rules:
-            - All non-joker tiles must have the same number
-            - Colors must be unique
-            - Jokers may substitute for missing colors
+Players form valid **melds** by arranging tiles into one of the following structures:
+
+### 1️⃣ Runs
+Sequences of **three or more consecutive numbers** in the **same color**.
+
+**Examples:**
+- `[Red 5, Red 6, Red 7]`
+- `[Blue 10, Joker, Blue 12]` → Joker represents **Blue 11**
+
+**Rules:**
+- All non-joker tiles must share the same color  
+- Numbers must be consecutive  
+- Jokers may fill gaps or extend a run  
+
+### 2️⃣ Sets
+Groups of **three or four tiles** with the **same number** in **different colors**.
+
+**Examples:**
+- `[Red 7, Blue 7, Black 7]`
+- `[Red 9, Joker, Black 9]` → Joker represents **Blue or Yellow 9**
+
+**Rules:**
+- All non-joker tiles must have the same value  
+- Colors must be unique  
+- Jokers may substitute for missing colors  
+
+---
 
 ## Project Overview
 This project focuses on building a clean, testable rules engine rather than a UI or full game implementation.
@@ -82,7 +93,7 @@ Example response:
 }
 ```
 
-
+---
 
 ## Getting Started
 #### Run Locally
@@ -99,6 +110,8 @@ docker build -t rummikub-engine .
 docker run -p 8080:8080 rummikub-engine
 ```
 
+---
+
 ## Testing
 Run unit tests with:
 ```
@@ -109,6 +122,8 @@ Tests cover:
     - Valid and invalid sets
     - Joker edge cases
     - Duplicate tiles and illegal configurations
+
+---
 
 ## Future Improvements
 - Support for full table validation (multiple melds in one turn)
