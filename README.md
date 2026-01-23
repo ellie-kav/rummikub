@@ -63,18 +63,37 @@ This project focuses on building a clean, testable rules engine rather than a UI
 
 ### Project Structure
 ``` 
-rummikub-rules-engine/
-├── src/
-│ ├── main/
-│ │ ├── java/
-│ │ │ └── com/example/rummikub/
-│ │ │ ├── model/ # Tile, Color, Meld, Joker
-│ │ │ ├── rules/ # RunValidator, SetValidator
-│ │ │ ├── service/ # RulesEngine
-│ │ │ └── controller/ # REST endpoints
-│ │ └── resources/
-│ └── test/
-│ └── java/ # Unit tests
+rummikub/
+├── src/main/java/com/elliekavanagh/rummikub/
+│   ├── api/                          # Spring Boot REST layer
+│   │   ├── RummikubApiApplication.java
+│   │   ├── ValidationController.java
+│   │   ├── HealthController.java
+│   │   └── dto/                      # Request/response objects
+│   │       ├── MeldValidationRequest.java
+│   │       ├── MeldValidationResponse.java
+│   │       └── TileDto.java
+│   │
+│   ├── model/                        # Core domain objects (framework-agnostic)
+│   │   ├── Tile.java
+│   │   ├── Color.java
+│   │   ├── Meld.java
+│   │   └── MeldType.java
+│   │
+│   └── rules/                        # Validation logic (framework-agnostic)
+│       ├── MeldRulesEngine.java      # Routes to appropriate validator
+│       ├── MeldValidator.java        # Validator interface
+│       ├── RunValidator.java         # Consecutive sequence validation
+│       └── SetValidator.java         # Same-value group validation
+│
+├── src/test/java/com/elliekavanagh/rummikub/
+│   ├── api/
+│   │   └── ValidationControllerTest.java  # Integration tests
+│   └── rules/
+│       ├── MeldRulesEngineTest.java
+│       ├── RunValidatorTest.java
+│       └── SetValidatorTest.java
+│
 ├── Dockerfile
 ├── pom.xml
 └── README.md
