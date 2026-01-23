@@ -195,26 +195,46 @@ The API is packaged as a Docker container to ensure consistent local development
 The rules engine is covered with focused unit tests around both **happy paths** and **edge cases**, especially for **joker substitution**.
 
 ### Unit Tests
-- ✅ `RunValidatorTest`
-  - Valid runs: 3-tile, 4+ tile, joker in middle, joker at ends, multiple jokers
-  - Invalid runs: color mismatch, gaps too large for available jokers, duplicates, out-of-range values
-- ✅ `SetValidatorTest`
-  - Valid sets: 3-tile, 4-tile, joker substitution for missing colors
-  - Invalid sets: duplicate colors, wrong size (<3 or >4), inconsistent values, illegal duplicates
-- ✅ `RulesEngineTest`
-  - Routes requests to the correct validator (RUN vs SET)
-  - Aggregates violations into a consistent response object
+
+- ✅ **`RunValidatorTest`**
+  - Valid runs:
+    - 3-tile consecutive run with same color
+    - Run with a joker filling an internal gap
+    - Run extended by jokers within valid bounds
+  - Invalid runs:
+    - Mixed colors
+    - Duplicate values
+    - Too-short runs (<3 tiles)
+    - All-joker runs
+
+- ✅ **`SetValidatorTest`**
+  - Valid sets:
+    - 3-tile set with distinct colors and same value
+    - 4-tile set with distinct colors and same value
+    - Joker substitution for a missing color
+  - Invalid sets:
+    - Duplicate colors
+    - Mixed values
+    - Too-short sets (<3 tiles)
+    - Too-long sets (>4 tiles)
+    - All-joker sets
+
+- ✅ **`MeldRulesEngineTest`**
+  - Validates RUN and SET melds through a single engine entry point
+  - Confirms correct dispatch to run vs set validation logic for valid inputs
 
 Run unit tests with:
 ```bash
 mvn test
 ```
 
-### Integration Tests (API)
+### Integration Tests (Application / API Layer)
 
-- ✅ **`MeldValidationControllerTest`**
-  - End-to-end validation via HTTP using JSON request/response bodies
-  - Verifies `400 Bad Request` responses for invalid payloads:
+- ✅ **`ValidationControllerTest`**
+  - Loads the full Spring application context (`@SpringBootTest`)
+  - Exercises the meld validation API via HTTP using `MockMvc` and JSON request/response bodies
+  - Verifies correct request routing from controller → rules engine → validators
+  - Asserts `400 Bad Request` responses for invalid payloads, including:
     - Missing required fields
     - Invalid enum values
     - Malformed or illegal tile definitions
@@ -222,7 +242,7 @@ mvn test
     - `violations` list
     - Echoed `type` field
 
-Run integration tests (if separated via naming or profile):
+Run integration tests:
 
 ```bash
 mvn test
@@ -233,8 +253,15 @@ mvn test
 
 ## Future Improvements
 
+- **Expanded test coverage:** continue refining the test suite with additional edge cases (e.g., joker placement at run boundaries, large gaps relative to joker count, and implied out-of-range values), as well as higher-level tests covering invalid combinations across meld types.
+
 - **Full table validation:** validate an entire board state (multiple melds per turn), including legality checks when tiles are rearranged across the table.
-- **Game state + turn flow:** model a complete game lifecycle (rack, draw pile, turns, plays) to support gameplay-level validation and stateful interactions.
+
+- **Game state and turn flow:** model a complete game lifecycle (rack, draw pile, turns, plays) to support gameplay-level validation and stateful interactions.
+
 - **Client interface:** add a lightweight **CLI** or simple web UI to submit melds and visualize validation results.
+
 - **Rules engine modularization:** extract the core validation logic into a standalone, framework-agnostic module that can be reused across different execution contexts (REST API, batch processing, or message-driven services).
+
 - **Service-oriented integration:** expose the rules engine behind a stable API contract to enable independent deployment and integration within a microservice-based architecture.
+
