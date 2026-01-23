@@ -82,23 +82,44 @@ rummikub-rules-engine/
 
 ### API Usage
 #### Validate a Meld
-POST /api/validate
-Example request body:
+POST /api/v1/melds/validate
+
+#### Example API Calls (cURL)
+Once the service is running locally, you can validate a meld using the following command:
+
+✅ RUN Example
+```bash
+curl -X POST http://localhost:8080/api/v1/melds/validate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "RUN",
+    "tiles": [
+      { "color": "RED", "value": 5, "joker": false },
+      { "color": "RED", "value": 6, "joker": false },
+      { "joker": true }
+    ]
+  }'
 ```
-{
-"tiles": [
-{ "color": "RED", "value": 5 },
-{ "color": "RED", "value": 6 },
-{ "color": "JOKER" }
-]
-}
+Expected response:
+```json
+{"valid": true}
 ```
-Example response:
+✅ SET Example
+```bash
+curl -X POST http://localhost:8080/api/v1/melds/validate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "SET",
+    "tiles": [
+      { "color": "RED", "value": 7, "joker": false },
+      { "color": "BLUE", "value": 7, "joker": false },
+      { "color": "BLACK", "value": 7, "joker": false }
+    ]
+  }'
 ```
-{
-"valid": true,
-"type": "RUN"
-}
+Expected response:
+```json
+{"valid": true}
 ```
 
 ### Technical Highlight: Joker Resolution
